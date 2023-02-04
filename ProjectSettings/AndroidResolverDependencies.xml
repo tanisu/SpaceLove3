@@ -3,6 +3,8 @@
     <package>androidx.lifecycle:lifecycle-common-java8:2.4.1</package>
     <package>androidx.lifecycle:lifecycle-process:2.4.1</package>
     <package>com.google.android.gms:play-services-ads:21.3.0</package>
+    <package>com.google.android.play:core-common:2.0.0</package>
+    <package>com.google.android.play:review:2.0.0</package>
     <package>com.google.android.ump:user-messaging-platform:2.0.0</package>
   </packages>
   <files>
@@ -56,6 +58,8 @@
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-measurement-base-20.1.2.aar</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-measurement-sdk-api-20.1.2.aar</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-tasks-18.0.1.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.play.core-common-2.0.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.play.review-2.0.0.aar</file>
     <file>Assets/Plugins/Android/com.google.android.ump.user-messaging-platform-2.0.0.aar</file>
     <file>Assets/Plugins/Android/com.google.guava.listenablefuture-1.0.jar</file>
   </files>

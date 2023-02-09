@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
         WAIT,
         PLAY,
         SETBLOCK,
+        CLEAR,
         GAMEOVER
     }
 
@@ -53,7 +54,15 @@ public class GameManager : MonoBehaviour
 
     public void SetMaxStage(int _stage)
     {
-        stage = _stage;
+        if(_stage < 20)
+        {
+            stage = _stage;
+        }
+        else
+        {
+            stage = 20;
+        }
+        
         
         w = 2 * _stage -2;
         h = 2 * _stage -2;
@@ -79,17 +88,17 @@ public class GameManager : MonoBehaviour
         ui.SetHoui(player.transform.localPosition,map.currentGoalPos);
         if(stage > 2)
         {
-            int aliens = stage / 2;
+            int aliens = stage / 3;
             map.PutAlien(aliens);
         }
-        if(stage > 5)
+        if(stage > 9)
         {
             int birdHs = stage / 6;
             map.PutBird(birdHs);
         }
-        if(stage > 9)
+        if(stage > 15)
         {
-            int birdVs = stage / 10;
+            int birdVs = stage / 11;
             map.PutBirdV(birdVs);
         }
     }
@@ -143,6 +152,7 @@ public class GameManager : MonoBehaviour
                 }
                 state = GAME_STATE.PLAY;
                 break;
+   
         }
         
     }
@@ -158,6 +168,9 @@ public class GameManager : MonoBehaviour
         {
             state = GAME_STATE.PLAY;
             player.HideCursor();
+        }else if(state == GAME_STATE.CLEAR)
+        {
+            StartCoroutine(_hideClear());
         }
     }
 
@@ -195,7 +208,15 @@ public class GameManager : MonoBehaviour
         
         w += 2;
         h += 2;
-        StartCoroutine(_reloadScene());
+        if(stage % 10 == 1)
+        {
+            StartCoroutine(_showClear());
+        }
+        else
+        {
+            StartCoroutine(_reloadScene());
+        }
+        
     }
     public void Miss()
     {
@@ -205,21 +226,24 @@ public class GameManager : MonoBehaviour
         life--;
         ui.HideLife(life);
         player.HideCursor();
+        if(life < 0)
+        {
+            StartCoroutine(GameOver());
+        }
     }
 
-    public void GameOver()
+    IEnumerator GameOver()
     {
-
+        yield return new WaitForSeconds(0.75f);
         state = GAME_STATE.GAMEOVER;
         SoundManager.I.PlaySE(SESoundData.SE.DEAD);
         SoundManager.I.StopBGM();
-       // naichilab.RankingLoader.Instance.SendScoreAndShowRanking(stage);
+       
         ui.ShowGameOverText();
     }
 
     private void ToTitle()
     {
-        //StartCoroutine(InAppReviewManager.RequestReview());
         SoundManager.I.StopBGM();
         SceneManager.LoadScene("Title");
         Destroy(gameObject);
@@ -241,6 +265,13 @@ public class GameManager : MonoBehaviour
         
     }
 
+    IEnumerator _showClear()
+    {
+        ui.ShowClearText();
+        state = GAME_STATE.CLEAR;
+        yield return new WaitForSeconds(1f);
+        ui.ShowClearPanel();
+    }
 
     IEnumerator _reloadScene()
     {
@@ -253,6 +284,14 @@ public class GameManager : MonoBehaviour
         ui.UIInit();
     }
 
+    IEnumerator _hideClear()
+    {
+        ui.HideClearPanel();
+        SceneManager.LoadScene("Main");
+        yield return new WaitForSeconds(0.1f);
+        InitGame();
+        ui.UIInit();
+    }
     
 
 

@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class UIController : MonoBehaviour
 {
     [SerializeField] Text stageText,lifeText,blockText;
-    [SerializeField] GameObject clearText, gameOverText,missText,titlePanel,controllerPanel,controllerWrapper;
+    [SerializeField] GameObject clearText, gameOverText,missText,titlePanel,controllerPanel,controllerWrapper,clearPanel;
     [SerializeField] Button StartButton,reStartButton,Abutton,titleButton,adButton;
     [SerializeField] Transform houiTf;
     [SerializeField] Image lifeAreaBG, blockAreaBg;
@@ -121,6 +121,7 @@ public class UIController : MonoBehaviour
 
     public void HideLife(int idx)
     {
+        if (idx < 0) idx = 0;
         lifeText.text = idx.ToString();
     }
 
@@ -168,7 +169,19 @@ public class UIController : MonoBehaviour
         missText.SetActive(false);
     }
 
+    public void ShowClearPanel()
+    {
+        adButton.gameObject.SetActive(false);
+        SoundManager.I.PlayBGM(BGMSoundData.BGM.CLEAR);
+        clearPanel.SetActive(true);
+    }
 
+    public void HideClearPanel()
+    {
+        adButton.gameObject.SetActive(true);
+        clearPanel.SetActive(false);
+        SoundManager.I.PlayBGM(BGMSoundData.BGM.MAIN);
+    }
 
     public void UIInit()
     {

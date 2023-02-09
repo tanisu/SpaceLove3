@@ -303,13 +303,17 @@ public class MapGenerator : MonoBehaviour
     public void InTheWall()
     {
 
-        if (GameManager.I.life == 0)
-        {
-            GameManager.I.GameOver();
-            return;
-        } 
+        //if (GameManager.I.life == 0)
+        //{
+        //    GameManager.I.GameOver();
+        //    return;
+        //} 
         GameManager.I.Miss();
-        StartCoroutine(_resetStage());
+        if(GameManager.I.life >= 0)
+        {
+            StartCoroutine(_resetStage());
+        }
+        
         
     }
 

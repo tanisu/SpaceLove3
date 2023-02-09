@@ -40,7 +40,7 @@ public class ADManager : MonoBehaviour
 #endif
         CreateAndLoadRewardedAd();
         RequestInterstitial();
-        RequestBanner();
+      //  RequestBanner();
     }
 
 

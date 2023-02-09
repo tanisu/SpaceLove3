@@ -22,6 +22,7 @@ public class LogoController : MonoBehaviour
             rtf.localScale = new Vector2(scale, scale);
             yield return new WaitForSeconds(0.001f);
         }
+        yield return new WaitForSeconds(0.25f);
         SoundManager.I.PlaySE(SESoundData.SE.TITLE);
     }
     IEnumerator _spaceLogo()
@@ -34,5 +35,6 @@ public class LogoController : MonoBehaviour
             transform.localScale = new Vector2(scale, scale);
             yield return new WaitForSeconds(0.001f);
         }
+        yield return new WaitForSeconds(0.2f);
     }
 }

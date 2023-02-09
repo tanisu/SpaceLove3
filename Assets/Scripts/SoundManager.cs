@@ -113,7 +113,7 @@ public class BGMSoundData
     public enum BGM
     {
         MAIN,
-
+        CLEAR
 
     }
 

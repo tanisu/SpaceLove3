@@ -10,6 +10,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] GameObject goal,life,addBlock;
     [SerializeField] Alien alien;
     [SerializeField] Bird bird,birdV;
+    [SerializeField] BallAlien ballAlien;
     [SerializeField] Player playerPrefab;
     [SerializeField] Transform map2D;
     [SerializeField] Sprite wallSprite,groundSprite;
@@ -31,6 +32,7 @@ public class MapGenerator : MonoBehaviour
     List<Vector2Int> tracePlayer = new List<Vector2Int>();
     List<Alien> aliens = new List<Alien>();
     List<Bird> birds = new List<Bird>();
+    List<BallAlien> balls = new List<BallAlien>();
     float mapSize;
     Vector2 centerPos,goalPos;
     Vector2Int itemPos;
@@ -71,6 +73,7 @@ public class MapGenerator : MonoBehaviour
         _setAddBlock();
         //_putBird();
         //_putBirdV();
+       // PutBallAliens();
     }
 
 
@@ -302,12 +305,6 @@ public class MapGenerator : MonoBehaviour
 
     public void InTheWall()
     {
-
-        //if (GameManager.I.life == 0)
-        //{
-        //    GameManager.I.GameOver();
-        //    return;
-        //} 
         GameManager.I.Miss();
         if(GameManager.I.life >= 0)
         {
@@ -315,6 +312,18 @@ public class MapGenerator : MonoBehaviour
         }
         
         
+    }
+
+    public void PutBallAliens(int _ballAliens)
+    {
+        for(int i = 0;i < _ballAliens; i++)
+        {
+            BallAlien _ball = Instantiate(ballAlien, map2D);
+            _ball.mapGenerator = this;
+            _getObjPos2(_ball);
+            balls.Add(_ball);
+        }
+
     }
 
     public void PutAlien(int _aliens)
@@ -374,7 +383,24 @@ public class MapGenerator : MonoBehaviour
             _alien.transform.position = ScreenPos(_pos);
             _alien.currentPos = _pos;
         }
+    }
 
+    private void _getObjPos2(BallAlien _ball)
+    {
+        int y = Random.Range(1, h - 2);
+        int x = Random.Range(1, w - 2);
+
+        Vector2Int _pos = new Vector2Int(x, y);
+        if (GetNextMapType(_pos) != MAP_TYPE.GROUND || player.GetComponent<Player>().currentPos == _pos || goalPos == _pos || itemPos == _pos)
+        {
+            _getObjPos2(_ball);
+        }
+        else
+        {
+            _ball.transform.position = ScreenPos(_pos);
+            _ball.currentPos = _pos;
+            //_ball.startPos = _pos;
+        }
     }
 
     public void MoveAliens()
@@ -412,6 +438,15 @@ public class MapGenerator : MonoBehaviour
             _bird.currentPos = _bird.startPos;
             _bird.gameObject.SetActive(true);
         }
+
+        foreach(BallAlien _ball in balls)
+        {
+            _ball.transform.localPosition = ScreenPos(_ball.startPos);
+            _ball.currentPos = _ball.startPos;
+            _ball.gameObject.SetActive(true);
+        }
+        
+        
         tracePlayer.Clear();
         player.isDead = false;
 

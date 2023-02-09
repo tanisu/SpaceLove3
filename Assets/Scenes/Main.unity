@@ -2944,6 +2944,7 @@ MonoBehaviour:
   alien: {fileID: 6531829637604557776, guid: f516d2dda8b9bfe43b5cb1a0de7f3f33, type: 3}
   bird: {fileID: 7204433692503979227, guid: 3f6d370ecb9119047ad5d86709135b2c, type: 3}
   birdV: {fileID: 6335559325887085436, guid: 61096b4e915e61a4aafd00fc6cfdf2a4, type: 3}
+  ballAlien: {fileID: 6910181988880449460, guid: f1f5ddd9c0abc4e4f840dbfccd183c57, type: 3}
   playerPrefab: {fileID: 5479356683270482058, guid: dca6612bea162ef4c8a701592623109c, type: 3}
   map2D: {fileID: 1893951458}
   wallSprite: {fileID: 21300000, guid: 122c713ead0a43e4ea04304213aecda5, type: 3}

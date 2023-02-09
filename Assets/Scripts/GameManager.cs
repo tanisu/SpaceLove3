@@ -101,6 +101,11 @@ public class GameManager : MonoBehaviour
             int birdVs = stage / 11;
             map.PutBirdV(birdVs);
         }
+        if(stage > 20)
+        {
+            int ballAliens = stage / 20;
+            map.PutBallAliens(ballAliens);
+        }
     }
 
     

@@ -18,7 +18,7 @@ public class LogoController : MonoBehaviour
         float scale = 0;
         while(scale < 1)
         {
-            scale += 0.025f;
+            scale += 0.035f;
             rtf.localScale = new Vector2(scale, scale);
             yield return new WaitForSeconds(0.001f);
         }
@@ -31,7 +31,7 @@ public class LogoController : MonoBehaviour
         float scale = 0;
         while (scale < 1)
         {
-            scale += 0.025f;
+            scale += 0.035f;
             transform.localScale = new Vector2(scale, scale);
             yield return new WaitForSeconds(0.001f);
         }

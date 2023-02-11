@@ -5,15 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    const int MAX_STAGE = 30;
+    const int FIRST_BLOCK = 3;
+    const int FIRST_LIFE = 2;
+    const int DELIMITER_STAGE = 10;
     public static GameManager I;
     public UIController ui;
     public MapGenerator map;
     Player player;
     int stage = 1;
-    public int life = 2;
-    public int block = 3;
+    public int life = FIRST_LIFE;
+    public int block = FIRST_BLOCK;
     public int w, h;
-    bool isBlockAd,isRetry;
+    bool isRetry,pushAd;
+    
    // int maxStage;
     public enum GAME_STATE
     {
@@ -21,7 +26,8 @@ public class GameManager : MonoBehaviour
         PLAY,
         SETBLOCK,
         CLEAR,
-        GAMEOVER
+        GAMEOVER,
+        ENDING
     }
 
     public GAME_STATE state;
@@ -45,10 +51,11 @@ public class GameManager : MonoBehaviour
         {
             ADManager.I.ShowInter();
             isRetry = false;
+            ui.ShowAdButton();
         }
+
         SoundManager.I.StartSE();
         SoundManager.I.PlayBGM(BGMSoundData.BGM.MAIN);
-
         InitGame();
     }
 
@@ -70,17 +77,17 @@ public class GameManager : MonoBehaviour
 
     private void InitGame()
     {
-        if (stage % 10 == 0)
-        {
-            isBlockAd = false;
-        }
-        ui.SwitchAdButton(!isBlockAd);
+        
         map.InitMap();
         ui.ReStart = ResetGame;
         ui.ToTitle = ToTitle;
         ui.ChangeMode = _changeMode;
         ui.HideClearText();
         state = GAME_STATE.PLAY;
+        if (ADManager.I.loaded && !pushAd)
+        {
+            ShowAdButton();
+        }
         ui.UpdateStageText(stage);
         player = map.player;
         player.GetItem = _getItem;
@@ -91,21 +98,22 @@ public class GameManager : MonoBehaviour
             int aliens = stage / 3;
             map.PutAlien(aliens);
         }
-        if(stage > 9)
+        if(stage > 6)
         {
             int birdHs = stage / 6;
             map.PutBird(birdHs);
         }
-        if(stage > 15)
+        if(stage > 10)
         {
-            int birdVs = stage / 11;
+            int birdVs = stage / 7;
             map.PutBirdV(birdVs);
         }
-        if(stage > 20)
+        if(stage > 15)
         {
-            int ballAliens = stage / 20;
+            int ballAliens = 3;
             map.PutBallAliens(ballAliens);
         }
+        
     }
 
     
@@ -123,7 +131,6 @@ public class GameManager : MonoBehaviour
             case "Block":
                 block +=3;
                 ui.UpdateBlockText(block);
-                
                 break;
         }
         ui.UpdateBGColor(_itemTag);
@@ -132,11 +139,13 @@ public class GameManager : MonoBehaviour
     public void GetItemFromAd()
     {
         block += 5;
-        isBlockAd = true;
         ui.UpdateBlockText(block);
         ui.UpdateBGColor("Block");
-        ui.SwitchAdButton(!isBlockAd);
+        ui.HideAdButton();
+        pushAd = true;
     }
+
+
 
     private void _pushArrow(int _idx)
     {
@@ -176,6 +185,9 @@ public class GameManager : MonoBehaviour
         }else if(state == GAME_STATE.CLEAR)
         {
             StartCoroutine(_hideClear());
+        }else if(state == GAME_STATE.ENDING)
+        {
+            ToTitle();
         }
     }
 
@@ -205,15 +217,24 @@ public class GameManager : MonoBehaviour
 
     public void StageClear()
     {
+        if(stage == MAX_STAGE)
+        {
+            StartCoroutine(_showEnding());
+            return;
+        }
         stage++;
         if(stage > PlayerPrefs.GetInt("Stage"))
         {
             PlayerPrefs.SetInt("Stage", stage);
         }
         
-        w += 2;
-        h += 2;
-        if(stage % 10 == 1)
+        if(stage < 20)
+        {
+            w += 2;
+            h += 2;
+        }
+        
+        if(stage % DELIMITER_STAGE == 1)
         {
             StartCoroutine(_showClear());
         }
@@ -231,6 +252,12 @@ public class GameManager : MonoBehaviour
         life--;
         ui.HideLife(life);
         player.HideCursor();
+        if(life >= 0 && block == 0)
+        {
+            block = FIRST_BLOCK;
+            ui.UpdateBlockText(block);
+        }
+
         if(life < 0)
         {
             StartCoroutine(GameOver());
@@ -253,14 +280,17 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Title");
         Destroy(gameObject);
     }
-    //Ž€‚ñ‚¾‚Æ‚«
+    //miss
     public void Restart()
     {
         StartCoroutine(_restart());
 
     }
 
-
+    public void ShowAdButton()
+    {
+        ui.ShowAdButton();
+    }
 
     IEnumerator _restart()
     {
@@ -273,9 +303,19 @@ public class GameManager : MonoBehaviour
     IEnumerator _showClear()
     {
         ui.ShowClearText();
+        ui.HideAdButton();
         state = GAME_STATE.CLEAR;
         yield return new WaitForSeconds(1f);
         ui.ShowClearPanel();
+    }
+
+    IEnumerator _showEnding()
+    {
+        
+        state = GAME_STATE.ENDING;
+        yield return new WaitForSeconds(1f);
+        SoundManager.I.PlayBGM(BGMSoundData.BGM.CLEAR);
+        ui.ShowEndingPanel();
     }
 
     IEnumerator _reloadScene()
@@ -294,6 +334,11 @@ public class GameManager : MonoBehaviour
         ui.HideClearPanel();
         SceneManager.LoadScene("Main");
         yield return new WaitForSeconds(0.1f);
+        if (ADManager.I.loaded)
+        {
+            pushAd = false;
+        }
+
         InitGame();
         ui.UIInit();
     }

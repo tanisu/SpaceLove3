@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class UIController : MonoBehaviour
 {
     [SerializeField] Text stageText,lifeText,blockText;
-    [SerializeField] GameObject clearText, gameOverText,missText,titlePanel,controllerPanel,controllerWrapper,clearPanel;
+    [SerializeField] GameObject clearText, gameOverText,missText,titlePanel,controllerPanel,controllerWrapper,clearPanel,endingPanel;
     [SerializeField] Button StartButton,reStartButton,Abutton,titleButton,adButton;
     [SerializeField] Transform houiTf;
     [SerializeField] Image lifeAreaBG, blockAreaBg;
@@ -43,18 +43,7 @@ public class UIController : MonoBehaviour
 
     }
 
-    public void SwitchAdButton(bool flag)
-    {
-        adButton.interactable = flag;
-        if(flag == false)
-        {
-            adButton.gameObject.SetActive(false);
-        }
-        else
-        {
-            adButton.gameObject.SetActive(true);
-        }
-    }
+
 
     void Update()
     {
@@ -171,16 +160,31 @@ public class UIController : MonoBehaviour
 
     public void ShowClearPanel()
     {
-        adButton.gameObject.SetActive(false);
+        
         SoundManager.I.PlayBGM(BGMSoundData.BGM.CLEAR);
         clearPanel.SetActive(true);
     }
 
     public void HideClearPanel()
     {
-        adButton.gameObject.SetActive(true);
+        
         clearPanel.SetActive(false);
         SoundManager.I.PlayBGM(BGMSoundData.BGM.MAIN);
+    }
+
+    public void ShowAdButton()
+    {
+        adButton.gameObject.SetActive(true);
+    }
+    public void HideAdButton()
+    {
+        adButton.gameObject.SetActive(false);
+    }
+
+    public void ShowEndingPanel()
+    {
+        adButton.gameObject.SetActive(false);
+        endingPanel.SetActive(true);
     }
 
     public void UIInit()

@@ -1,10 +1,13 @@
 using GoogleMobileAds.Api;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 
 public class ADManager : MonoBehaviour
 {
     bool rewardFlag = false;
+    bool once = true;
+    public bool loaded;
     RewardedAd rewarded;
     InterstitialAd inter;
     BannerView bannerView;
@@ -69,9 +72,23 @@ public class ADManager : MonoBehaviour
         if (rewardFlag)
         {
             rewardFlag = false;
-            GameManager.I.GetItemFromAd();
+            if (GameManager.I)
+            {
+                GameManager.I.GetItemFromAd();
+            }
+            
         }
-    }
+        if (rewarded.IsLoaded() && once)
+        {
+            once = false;
+            loaded = true;
+            if (GameManager.I)
+            {
+                GameManager.I.ShowAdButton();
+            }
+            
+        }
+     }
 
     public void CreateAndLoadRewardedAd()
     {

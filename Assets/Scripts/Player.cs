@@ -23,9 +23,9 @@ public class Player : MonoBehaviour
     };
     public MapGenerator mapGenerator;
     [SerializeField]Cursor[] cursors;
-    public bool isDead,canPut;
+    public bool isDead,canPut,isStop;
     public UnityAction<string> GetItem ;
-    
+    public UnityAction DelStopCount;
     void Start()
     {
         startPos = currentPos;
@@ -54,9 +54,14 @@ public class Player : MonoBehaviour
         currentPos = nextPos;
 
         mapGenerator.CheckPlayerMoved(currentPos);
-        if (!isDead)
+        if (!isDead && !isStop)
         {
             mapGenerator.MoveAliens();
+        }
+        if (isStop)
+        {
+            DelStopCount?.Invoke();
+            mapGenerator.CheckGoal();
         }
         
     }
@@ -120,6 +125,12 @@ public class Player : MonoBehaviour
         if (collision.CompareTag("Block"))
         {
             collision.gameObject.SetActive(false);
+            GetItem?.Invoke(collision.tag);
+        }
+        if (collision.CompareTag("Stop"))
+        {
+            collision.gameObject.SetActive(false);
+            isStop = true;
             GetItem?.Invoke(collision.tag);
         }
 

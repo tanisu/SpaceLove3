@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class StageController : MonoBehaviour
 {
     [SerializeField] Text scoreText;
+    [SerializeField] GameObject howtoPanel;
     int maxStage;
     private void Awake()
     {
@@ -36,6 +37,15 @@ public class StageController : MonoBehaviour
         GameManager gm = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         gm.SetMaxStage(maxStage);
         SceneManager.sceneLoaded -= GameSceneLoaded;
+    }
+
+    public void ShowHowToPanel()
+    {
+        howtoPanel.SetActive(true);
+    }
+    public void HideHowToPanel()
+    {
+        howtoPanel.SetActive(false);
     }
 
 

@@ -7,8 +7,8 @@ using UnityEngine.Events;
 
 public class UIController : MonoBehaviour
 {
-    [SerializeField] Text stageText,lifeText,blockText;
-    [SerializeField] GameObject clearText, gameOverText,missText,titlePanel,controllerPanel,controllerWrapper,clearPanel,endingPanel;
+    [SerializeField] Text stageText,lifeText,blockText,stopTimerText,timerStateText;
+    [SerializeField] GameObject clearText, gameOverText,missText,titlePanel,controllerPanel,controllerWrapper,clearPanel,endingPanel,stopTimerPanel;
     [SerializeField] Button StartButton,reStartButton,Abutton,titleButton,adButton;
     [SerializeField] Transform houiTf;
     [SerializeField] Image lifeAreaBG, blockAreaBg;
@@ -108,6 +108,7 @@ public class UIController : MonoBehaviour
     }
 
 
+
     public void HideLife(int idx)
     {
         if (idx < 0) idx = 0;
@@ -122,6 +123,37 @@ public class UIController : MonoBehaviour
     public void UpdateStageText(int _stage)
     {
         stageText.text = $"STAGE {_stage}";
+    }
+
+    public void ShowTimerPanel(int _timer)
+    {
+        stopTimerPanel.SetActive(true);
+        stopTimerText.text = $"{_timer}";
+        StartCoroutine(_showtimerStateText());
+    }
+
+    IEnumerator _showtimerStateText()
+    {
+        timerStateText.text = "TIME STOP!";
+        yield return new WaitForSeconds(1f);
+        timerStateText.text = "";
+    }
+
+    public void UpdateTimerText(int _timer)
+    {
+        stopTimerText.text = $"{_timer}";
+    }
+
+    public void HideTimerPanel()
+    {
+        StartCoroutine(_hideTimer());
+    }
+
+    IEnumerator _hideTimer()
+    {
+        timerStateText.text = "TIME TO MOVE!";
+        yield return new WaitForSeconds(1f);
+        stopTimerPanel.SetActive(false);
     }
 
     public void ShowClearText()

@@ -10,6 +10,7 @@ TagManager:
   - Life
   - Block
   - Alien
+  - Stop
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - BG
   - 
   - 
   - 

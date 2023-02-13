@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     const int FIRST_BLOCK = 3;
     const int FIRST_LIFE = 2;
     const int DELIMITER_STAGE = 10;
+    const int STOP_COUNT = 10;
     public static GameManager I;
     public UIController ui;
     public MapGenerator map;
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     int stage = 1;
     public int life = FIRST_LIFE;
     public int block = FIRST_BLOCK;
+    public int stop = 0;
     public int w, h;
     bool isRetry,pushAd;
     
@@ -79,6 +81,9 @@ public class GameManager : MonoBehaviour
     {
         
         map.InitMap();
+
+        
+
         ui.ReStart = ResetGame;
         ui.ToTitle = ToTitle;
         ui.ChangeMode = _changeMode;
@@ -91,18 +96,30 @@ public class GameManager : MonoBehaviour
         ui.UpdateStageText(stage);
         player = map.player;
         player.GetItem = _getItem;
+        player.DelStopCount = _delStopCount;
         ui.PushArrow = _pushArrow;
         ui.SetHoui(player.transform.localPosition,map.currentGoalPos);
+        if(stage <= 2)
+        {
+            map.PutAlien(1);
+        }
         if(stage > 2)
         {
-            int aliens = stage / 3;
+            map.SetStopTimer();
+
+            int aliens = stage / 2;
             map.PutAlien(aliens);
         }
+
+        
         if(stage > 6)
         {
             int birdHs = stage / 6;
             map.PutBird(birdHs);
         }
+
+
+
         if(stage > 10)
         {
             int birdVs = stage / 7;
@@ -116,7 +133,16 @@ public class GameManager : MonoBehaviour
         
     }
 
-    
+    private void _delStopCount()
+    {
+        stop--;
+        ui.UpdateTimerText(stop);
+        if(stop == 0)
+        {
+            player.isStop = false;
+            ui.HideTimerPanel();
+        }
+    }
 
 
     private void _getItem(string _itemTag)
@@ -129,8 +155,12 @@ public class GameManager : MonoBehaviour
                 
                 break;
             case "Block":
-                block +=3;
+                block += FIRST_BLOCK;
                 ui.UpdateBlockText(block);
+                break;
+            case "Stop":
+                stop = STOP_COUNT;
+                ui.ShowTimerPanel(stop);
                 break;
         }
         ui.UpdateBGColor(_itemTag);
@@ -256,6 +286,13 @@ public class GameManager : MonoBehaviour
         {
             block = FIRST_BLOCK;
             ui.UpdateBlockText(block);
+        }
+
+        if(stop > 0)
+        {
+            stop = 0;
+            ui.HideTimerPanel();
+            player.isStop = false;
         }
 
         if(life < 0)

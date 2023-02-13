@@ -7,7 +7,7 @@ public class MapGenerator : MonoBehaviour
 {
     
     [SerializeField] GameObject[] prefabs;
-    [SerializeField] GameObject goal,life,addBlock;
+    [SerializeField] GameObject goal,life,addBlock,stopTimer;
     [SerializeField] Alien alien;
     [SerializeField] Bird bird,birdV;
     [SerializeField] BallAlien ballAlien;
@@ -174,7 +174,12 @@ public class MapGenerator : MonoBehaviour
     {
         GameObject _life = Instantiate(life, map2D);
         _putObj(_life);
-        
+    }
+
+    public void SetStopTimer()
+    {
+        GameObject _stopTimer = Instantiate(stopTimer,map2D);
+        _putObj(_stopTimer);
     }
 
     private void _putObj(GameObject _obj)
@@ -257,49 +262,44 @@ public class MapGenerator : MonoBehaviour
     public void CheckPlayerMoved(Vector2Int _pos)
     {
 
-        if (aliens.Count == 0 || birds.Count == 0)
+
+        foreach (Alien _alien in aliens)
         {
-            if(_pos == goalPos)
+            if (_pos == _alien.currentPos)
             {
-                isClear = true;
-                SoundManager.I.PlaySE(SESoundData.SE.CLEAR);
-                GameManager.I.StageClear();
+                player.isDead = true;
             }
         }
-        else
+        foreach(Bird _bird in birds)
         {
-            foreach (Alien _alien in aliens)
+            if (_pos == _bird.currentPos)
             {
-                if (_pos == _alien.currentPos)
-                {
-                    InTheWall();
-                    player.isDead = true;
-                }
+                player.isDead = true;
             }
-            foreach(Bird _bird in birds)
-            {
-                if (_pos == _bird.currentPos)
-                {
-                    InTheWall();
-                    player.isDead = true;
-                }
-            }
-            
         }
-        
-        
+        foreach(BallAlien _ball in balls)
+        {
+            if(_pos == _ball.currentPos)
+            {
+                player.isDead = true;
+            }
+        }
+
+        if (player.isDead)
+        {
+            InTheWall();
+        }
+
+
+
     }
 
     public void CheckAliens(Vector2Int _pos)
     {
         if(_pos == player.currentPos)
         {
+            player.isDead = true;
             InTheWall();
-        }else if(player.currentPos == goalPos && !isClear)
-        {
-            isClear = true;
-            SoundManager.I.PlaySE(SESoundData.SE.CLEAR);
-            GameManager.I.StageClear();
         }
     }
 
@@ -399,7 +399,6 @@ public class MapGenerator : MonoBehaviour
         {
             _ball.transform.position = ScreenPos(_pos);
             _ball.currentPos = _pos;
-            //_ball.startPos = _pos;
         }
     }
 
@@ -413,6 +412,18 @@ public class MapGenerator : MonoBehaviour
         foreach(Bird _bird in birds)
         {
             _bird.Move();
+        }
+
+        CheckGoal();
+    }
+
+    public void CheckGoal()
+    {
+        if (!player.isDead && player.currentPos == goalPos && !isClear)
+        {
+            isClear = true;
+            SoundManager.I.PlaySE(SESoundData.SE.CLEAR);
+            GameManager.I.StageClear();
         }
     }
 

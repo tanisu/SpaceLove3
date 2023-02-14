@@ -39,6 +39,7 @@ public class ADManager : MonoBehaviour
         adUnitIdReward = "ca-app-pub-1205963622209231/6595865764";
         adUnitIdInter =  "ca-app-pub-1205963622209231/7507839793";
         adUnitIdBanner = "ca-app-pub-1205963622209231/8820921462";
+        MobileAds.SetiOSAppPauseOnBackground(true);
 #else
 #endif
         CreateAndLoadRewardedAd();

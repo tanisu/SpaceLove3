@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     public int stop = 0;
     public int w, h;
     bool isRetry,pushAd;
-    
+    public bool isStop;
    // int maxStage;
     public enum GAME_STATE
     {
@@ -125,12 +125,21 @@ public class GameManager : MonoBehaviour
             int birdVs = stage / 7;
             map.PutBirdV(birdVs);
         }
-        if(stage > 15)
+        if(stage > 15 && stage <= 20)
         {
             int ballAliens = 3;
             map.PutBallAliens(ballAliens);
         }
-        
+        if(stage > 20 && stage <= 27)
+        {
+            int ballAliens = 5;
+            map.PutBallAliens(ballAliens);
+        }
+        if(stage > 27)
+        {
+            int ballAliens = 7;
+            map.PutBallAliens(ballAliens);
+        }
     }
 
     private void _delStopCount()
@@ -139,6 +148,7 @@ public class GameManager : MonoBehaviour
         ui.UpdateTimerText(stop);
         if(stop == 0)
         {
+            isStop = false;
             player.isStop = false;
             ui.HideTimerPanel();
         }
@@ -161,6 +171,7 @@ public class GameManager : MonoBehaviour
             case "Stop":
                 stop = STOP_COUNT;
                 ui.ShowTimerPanel(stop);
+                isStop = true;
                 break;
         }
         ui.UpdateBGColor(_itemTag);

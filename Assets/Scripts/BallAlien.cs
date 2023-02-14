@@ -36,7 +36,7 @@ public class BallAlien : MonoBehaviour
     public MapGenerator mapGenerator;
     public void Move()
     {
-        
+        if (GameManager.I.isStop) return;
         if (GameManager.I.state != GameManager.GAME_STATE.PLAY) return;
         int d = ((int)direction + 2) % (int)DIRECTION.DIRECTION_MAX;
         DIRECTION oppsit = (DIRECTION)Enum.ToObject(typeof(DIRECTION), d);

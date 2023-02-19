@@ -63,14 +63,12 @@ public class GameManager : MonoBehaviour
 
     public void SetMaxStage(int _stage)
     {
-        if(_stage < 20)
+        stage = _stage;
+        if(_stage >= 20)
         {
-            stage = _stage;
+            _stage = 20;
         }
-        else
-        {
-            stage = 20;
-        }
+        
         
         
         w = 2 * _stage -2;
@@ -99,11 +97,13 @@ public class GameManager : MonoBehaviour
         player.DelStopCount = _delStopCount;
         ui.PushArrow = _pushArrow;
         ui.SetHoui(player.transform.localPosition,map.currentGoalPos);
-        if(stage <= 2)
+
+
+        if (stage <= 2)
         {
             map.PutAlien(1);
         }
-        if(stage > 2)
+        if (stage > 2)
         {
             map.SetStopTimer();
 
@@ -111,8 +111,8 @@ public class GameManager : MonoBehaviour
             map.PutAlien(aliens);
         }
 
-        
-        if(stage > 6)
+
+        if (stage > 6)
         {
             int birdHs = stage / 6;
             map.PutBird(birdHs);
@@ -120,26 +120,27 @@ public class GameManager : MonoBehaviour
 
 
 
-        if(stage > 10)
+        if (stage > 10)
         {
             int birdVs = stage / 7;
             map.PutBirdV(birdVs);
         }
-        if(stage > 15 && stage <= 20)
+        if (stage > 15 && stage <= 20)
         {
             int ballAliens = 3;
             map.PutBallAliens(ballAliens);
         }
-        if(stage > 20 && stage <= 27)
+        if (stage > 20 && stage <= 27)
         {
             int ballAliens = 5;
             map.PutBallAliens(ballAliens);
         }
-        if(stage > 27)
+        if (stage > 27)
         {
             int ballAliens = 7;
             map.PutBallAliens(ballAliens);
         }
+
     }
 
     private void _delStopCount()
